@@ -19,9 +19,9 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // routes
 app.use('/', require('./routes/root'))
-// app.use('/states', require('./routes/states'))
+app.use('/states', require('./routes/states'))
 
-app.all('*whatever', (req, res) => {
+app.all('*etc', (req, res) => {
 	res.status(404)
 	if (req.accepts('html')) {
 		res.sendFile(path.join(__dirname, 'views', '404.html'))
