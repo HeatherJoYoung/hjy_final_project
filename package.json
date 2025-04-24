@@ -1,0 +1,20 @@
+{
+  "name": "hjy_final_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+		"dev": "nodemon app.js",
+		"debug": "node --inspect-brk app.js"
+  },
+  "author": "Heather J Young",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
