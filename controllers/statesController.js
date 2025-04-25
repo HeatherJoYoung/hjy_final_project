@@ -17,11 +17,82 @@ const getAllStates = async (req, res) => {
 			return res.status(400).json({ 'message': 'Invalid query parameter. Use "true" or "false".' });
 		}
 	}
-	console.log(`number of states returned: ${states.length}`)
+	
 	const stateFacts = await State.find();
 	res.json(states.map(state => ({ ...state, funfacts: stateFacts.find(fact => fact.stateCode === state.code)?.funfacts })));
 }
 
+const getState = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const state = data.find(state => state.code === stateCode);
+	if (!state) {
+		return res.status(404).json({ 'message': `State code ${stateCode} not found.` });
+	}
+	const stateFacts = await State.findOne({ stateCode });
+	res.json({ ...state, funfacts: stateFacts.funfacts});
+}
+
+const getFunFact = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const stateFacts = await State.findOne({ stateCode });
+	const randomIndex = Math.floor(Math.random() * stateFacts.funfacts.length);
+	res.json(stateFacts.funfacts[randomIndex]);
+}
+
+const getCapital = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const state = data.find(state => state.code === stateCode);
+	if (!state) {
+		return res.status(404).json({ 'message': `State code ${stateCode} not found.` });
+	}
+	res.json({
+		'state': state.state,
+		'capital': state.capital_city
+	});
+}
+
+const getNickname = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const state = data.find(state => state.code === stateCode);
+	if (!state) {
+		return res.status(404).json({ 'message': `State code ${stateCode} not found.` });
+	}
+	res.json({
+		'state': state.state,
+		'nickname': state.nickname
+	});
+}
+
+const getPopulation = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const state = data.find(state => state.code === stateCode);
+	if (!state) {
+		return res.status(404).json({ 'message': `State code ${stateCode} not found.` });
+	}
+	res.json({
+		'state': state.state,
+		'population': state.population
+	});
+}
+
+const getAdmission = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const state = data.find(state => state.code === stateCode);
+	if (!state) {
+		return res.status(404).json({ 'message': `State code ${stateCode} not found.` });
+	}
+	res.json({
+		'state': state.state,
+		'admitted': state.admission_date
+	});
+}
+
 module.exports = {
-	getAllStates
+	getAllStates,
+	getState,
+	getFunFact,
+	getCapital,
+	getNickname,
+	getPopulation,
+	getAdmission
 }

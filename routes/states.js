@@ -4,13 +4,10 @@ const statesController = require('../controllers/statesController')
 
 router.route('/')
 	.get(statesController.getAllStates)
-	//.post(statesController.createNewEmployee)
-	//.put(statesController.updateEmployee)
-	//.delete(statesController.deleteEmployee)
 
-/* router.route('/:state')
-	.get(statesController.getEmployee)
-	.put((req, res) => {
+router.route('/:state')
+	.get(statesController.getState)
+	/* .put((req, res) => {
 		const employee = {
 			id: parseInt(req.params.id),
 			firstname: req.body.firstname,
@@ -36,5 +33,20 @@ router.route('/')
 		data.employees.splice(index, 1)
 		res.json(data.employees)
 	}) */
+
+router.route('/:state/funfact')
+	.get(statesController.getFunFact)
+
+router.route('/:state/capital')
+	.get(statesController.getCapital)
+
+router.route('/:state/nickname')
+	.get(statesController.getNickname)
+
+router.route('/:state/population')
+	.get(statesController.getPopulation)
+
+router.route('/:state/admission')
+	.get(statesController.getAdmission)
 
 module.exports = router
