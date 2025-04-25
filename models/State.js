@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const stateSchema = new Schema({
-		id: {
+		stateCode: {
 				type: String,
 				required: true,
 				trim: true
 		},
-		facts: {
+		funfacts: {
 				type: [String]
 		}
 });

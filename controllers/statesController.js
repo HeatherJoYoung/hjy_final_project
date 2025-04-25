@@ -1,28 +1,23 @@
 const data = require('../models/states.json')
 const State = require('../models/State');
 
-const getAllStates = async (req, res) => {
+/* const getAllStates = async (req, res) => {
 	const states = await State.find();
 	if (!states) {
 		return res.status(204).json({ 'message': 'No states found.' });
 	}
 	res.json(states.map(state => {
 		return {
-			id: state.id,
-			facts: state.facts
+			code: state.stateCode,
+			funfacts: state.funfacts
 		}
 	}));
-}
-
-/* const getAllStates = (req, res) => {
-	console.log(`Number of states in provided json: ${data.length}`)
-	res.json(data.map(state => {
-		return {
-			id: state.code,
-			facts: []
-		}
-	}))
 } */
+
+const getAllStates = async (req, res) => {
+	const stateFacts = await State.find();
+	res.json(data.map(state => ({ ...state, funfacts: stateFacts.find(fact => fact.stateCode === state.code)?.funfacts })));
+}
 
 module.exports = {
 	getAllStates
