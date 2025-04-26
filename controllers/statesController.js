@@ -39,6 +39,51 @@ const getFunFact = async (req, res) => {
 	res.json(stateFacts.funfacts[randomIndex]);
 }
 
+const addFunFacts = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const newFacts = req.body.funfacts;
+
+	const result = await State.findOneAndUpdate(
+		{ stateCode },
+		{ $push: { funfacts: { $each: newFacts } } },
+		{ new: true }
+	)
+	res.json(result)
+}
+
+const updateFunFact = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const index = req.body.index;
+	const update = req.body.funfact;
+
+	const result = await State.findOneAndUpdate(
+		{ stateCode },
+		{ $set: { [`funfacts.${index-1}`]: update } },
+		{ new: true }
+
+	)
+	res.json(result)
+}
+
+const deleteFunFact = async (req, res) => {
+	const stateCode = req.params.state.toUpperCase();
+	const index = req.body.index;
+
+	await State.findOneAndUpdate(
+		{ stateCode },
+		{ $unset: { [`funfacts.${index-1}`]: 1 } },
+		{ new: true }
+	)
+
+	const result = await State.findOneAndUpdate(
+		{ stateCode },
+		{ $pull: { funfacts: null } },
+		{ new: true }	
+	)
+	res.json(result)
+}
+	
+
 const getCapital = async (req, res) => {
 	const stateCode = req.params.state.toUpperCase();
 	const state = data.find(state => state.code === stateCode);
@@ -94,5 +139,8 @@ module.exports = {
 	getCapital,
 	getNickname,
 	getPopulation,
-	getAdmission
+	getAdmission,
+	addFunFacts,
+	updateFunFact,
+	deleteFunFact
 }
