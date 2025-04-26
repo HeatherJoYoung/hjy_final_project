@@ -29,7 +29,11 @@ const getState = async (req, res) => {
 		return res.status(404).json({ 'message': 'Invalid state abbreviation parameter' });
 	}
 	const stateFacts = await State.findOne({ stateCode });
-	res.json({ ...state, funfacts: stateFacts.funfacts});
+	if (stateFacts?.funfacts.length < 1 || !stateFacts.funfacts) {
+		return res.json(state);
+	} else {
+		res.json({ ...state, funfacts: stateFacts.funfacts});
+	}
 }
 
 const getFunFact = async (req, res) => {
@@ -43,7 +47,9 @@ const getFunFact = async (req, res) => {
 		return res.json({ 'message': `No Fun Facts found for ${state.state}` });
 	}
 	const randomIndex = Math.floor(Math.random() * stateFacts.funfacts.length);
-	res.json(stateFacts.funfacts[randomIndex]);
+	res.json({
+		"funfact": stateFacts.funfacts[randomIndex]
+	});
 }
 
 const addFunFacts = async (req, res) => {
