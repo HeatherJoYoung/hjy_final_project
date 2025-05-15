@@ -36,6 +36,15 @@ const getState = async (req, res) => {
 	}
 }
 
+const getStateFunFacts = async (stateCode) => {
+	const stateFacts = await State.findOne({ stateCode });
+	if (!stateFacts.funfacts) {
+		return [];
+	} else {
+		return stateFacts.funfacts;
+	}
+}
+
 const getFunFact = async (req, res) => {
 	const stateCode = req.params.state.toUpperCase();
 	const state = data.find(state => state.code === stateCode);
@@ -56,6 +65,14 @@ const addFunFacts = async (req, res) => {
 	const stateCode = req.params.state.toUpperCase();
 	const newFacts = req.body.funfacts;
 
+	if (!newFacts || (Array.isArray(newFacts) && newFacts.length < 1)) {
+		return res.status(400).json({ 'message': 'State fun facts value required' });
+	}
+
+	if (!Array.isArray(newFacts)) {
+		return res.status(400).json({ 'message': 'State fun facts value must be an array' });
+	}
+
 	const result = await State.findOneAndUpdate(
 		{ stateCode },
 		{ $push: { funfacts: { $each: newFacts } } },
@@ -68,6 +85,25 @@ const updateFunFact = async (req, res) => {
 	const stateCode = req.params.state.toUpperCase();
 	const index = req.body.index;
 	const update = req.body.funfact;
+	const state = data.find(state => state.code === stateCode);
+
+	if (!index || index < 1) {
+		return res.status(400).json({ 'message': 'State fun fact index value required' });
+	}
+
+	if (!update) {
+		return res.status(400).json({ 'message': 'State fun fact value required' });
+	}
+
+	const stateFunFacts = await getStateFunFacts(stateCode)
+
+	if (!stateFunFacts || stateFunFacts.length < 1) {
+		return res.status(404).json({ 'message': `No Fun Facts found for ${state.state}` });
+	}
+
+	if (index > stateFunFacts.length) {
+		return res.status(400).json({ 'message': `No Fun Fact found at index for ${state.state}` });
+	}
 
 	const result = await State.findOneAndUpdate(
 		{ stateCode },
@@ -80,6 +116,21 @@ const updateFunFact = async (req, res) => {
 const deleteFunFact = async (req, res) => {
 	const stateCode = req.params.state.toUpperCase();
 	const index = req.body.index;
+	const state = data.find(state => state.code === stateCode);
+
+	if (!index || index < 1) {
+		return res.status(400).json({ 'message': 'State fun fact index value required' });
+	}
+
+	const stateFunFacts = await getStateFunFacts(stateCode);
+
+	if (!stateFunFacts || stateFunFacts.length < 1) {
+		return res.status(404).json({ 'message': `No Fun Facts found for ${state.state}` });
+	}
+
+	if (index > stateFunFacts.length) {
+		return res.status(400).json({ 'message': `No Fun Fact found at index for ${state.state}` });
+	}
 
 	await State.findOneAndUpdate(
 		{ stateCode },
