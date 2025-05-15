@@ -102,7 +102,7 @@ const updateFunFact = async (req, res) => {
 	}
 
 	if (index > stateFunFacts.length) {
-		return res.status(400).json({ 'message': `No Fun Fact found at index for ${state.state}` });
+		return res.status(400).json({ 'message': `No Fun Fact found at that index for ${state.state}` });
 	}
 
 	const result = await State.findOneAndUpdate(
@@ -129,7 +129,7 @@ const deleteFunFact = async (req, res) => {
 	}
 
 	if (index > stateFunFacts.length) {
-		return res.status(400).json({ 'message': `No Fun Fact found at index for ${state.state}` });
+		return res.status(400).json({ 'message': `No Fun Fact found at that index for ${state.state}` });
 	}
 
 	await State.findOneAndUpdate(
